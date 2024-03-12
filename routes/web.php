@@ -19,7 +19,7 @@ use App\Http\Controllers\AffiliateLinkController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', function () { return view('admin.dashboard.statistics'); })->name('admin.dashboard');
     Route::get('/product/add', [ProductController::class, 'addProductPage'])->name('admin.product.add');        //[done]
     Route::post('/product/store', [ProductController::class, 'addNewProduct'])->name('admin.product.store');    //[done]
@@ -37,16 +37,15 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('client')->group(function () {
     Route::get('/home', [HomeController::class, 'home'])->name('home.home');
-
-    Route::post('/cart', [CartController::class, 'addToCart'])->name('cart.store');
-    Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
-    Route::delete('/cart/{cartItem}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-
-    Route::get('/checkout', [CartController::class, 'showCheckout'])->name('checkout.show');
-    Route::post('/checkout', [CartController::class, 'processCheckout'])->name('checkout.process');
-
-
     Route::get('/search', [HomeController::class, 'search'] )->name('search.results');
+
+    Route::middleware('auth')->group(function () {
+        Route::post('/cart', [CartController::class, 'addToCart'])->name('cart.store');
+        Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
+        Route::delete('/cart/{cartItem}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+        Route::get('/checkout', [CartController::class, 'showCheckout'])->name('checkout.show');
+        Route::post('/checkout', [CartController::class, 'processCheckout'])->name('checkout.process');
+    });
 });
 
 // Products
@@ -56,7 +55,7 @@ Route::get('/products/{product}', [HomeController::class, 'show'])->name('produc
 //Route::get('/list-users', [AffiliateLinkController::class, 'listAffiliatedUsers'])->name('admin.affiliated.users');
 
 // Click Tracking
-Route::get('/affiliate/{affiliateLink}', [ClickController::class, 'store'])->name('clicks.store');
+Route::get('/affiliate/{affiliateLink}', [ClickController::class, 'trackClick'])->name('clicks.store');
 
 // Commissions
 Route::get('/commissions', [CommissionController::class, 'index'])->name('commissions.index');

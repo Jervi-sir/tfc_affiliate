@@ -14,6 +14,7 @@
                         <th class="whitespace-no-wrap">IMAGES</th>
                         <th class="whitespace-no-wrap">PRODUCT NAME</th>
                         <th class="text-center whitespace-no-wrap">CLICKS</th>
+                        <th class="text-center whitespace-no-wrap">REVENUE</th>
                         <th class="text-center whitespace-no-wrap">STATUS</th>
                         <th class="text-center whitespace-no-wrap">ACTIONS</th>
                     </tr>
@@ -36,9 +37,10 @@
                                 </div>
                             </td>
                             <td>
-                                <a href="" class="font-medium whitespace-no-wrap">{{ $affiliate->product->name }}</a>
+                                <a href={{route('products.show', ['product' => $affiliate->product])}} target="_blank" class="font-medium whitespace-no-wrap">{{ $affiliate->product->name }}</a>
                             </td>
                             <td class="text-center">{{ $affiliate->clicks()->count() }}</td>
+                            <td class="text-center">{{ $affiliate->totalSales }}</td>
                             <td class="w-40">
                                 <div
                                     class="flex items-center justify-center {{ $affiliate->product->is_active ? 'text-theme-9' : 'text-theme-6' }}">
@@ -54,10 +56,11 @@
                                     <script>
                                         function copyToClipboard(event, link) {
                                             event.preventDefault(); // Prevent the default anchor action
+                                            const linkee ='localhost:8000/affiliate/' + link
 
                                             // Copy the link to the clipboard
-                                            navigator.clipboard.writeText(link).then(function() {
-                                                alert('Copied to clipboard: ' + link); // Show an alert with the link
+                                            navigator.clipboard.writeText(linkee).then(function() {
+                                                alert('Copied to clipboard: ' + linkee); // Show an alert with the link
                                             }, function(err) {
                                                 console.error('Could not copy text: ', err); // Log an error if there was a problem
                                             });

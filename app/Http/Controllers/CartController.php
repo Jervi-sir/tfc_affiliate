@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Models\AffiliateLink;
+use App\Models\PurchaseRecord;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -51,7 +53,7 @@ class CartController extends Controller
     public function showCheckout(Request $request)
     {
         $cartItems = Cart::where('user_id', Auth::id())->where('status', 'unpaid')->with('product')->get();
-
+        if($cartItems->count() == 0) return redirect()->route('home.home');
         $totalPrice = $cartItems->reduce(function ($carry, $item) {
             return $carry + ($item->product->price * $item->quantity);
         }, 0);
@@ -83,6 +85,17 @@ class CartController extends Controller
         $order->wilaya = $request->input('wilaya');
         $order->zipcode = $request->input('zipCode');
         $order->save();
+
+        $affiliateId = session('affiliate_id');
+        if ($affiliateId) {
+            $purchaseRecord = new PurchaseRecord();
+            $purchaseRecord->user_id = auth()->id();
+            $purchaseRecord->total_price = $totalPrice;
+            $purchaseRecord->affiliate_id = AffiliateLink::where('link', $affiliateId)->first()->id;
+            $purchaseRecord->save();
+
+            $request->session()->forget('affiliate_id');
+        }
 
         return view('client.checkout.success')->with('success', 'Order placed successfully.');
     }

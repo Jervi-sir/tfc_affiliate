@@ -64,4 +64,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(AffiliateLink::class, 'affiliate_id');
     }
+
+    public function unpaidCarts()
+    {
+        return $this->carts()->where('status', 'unpaid');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

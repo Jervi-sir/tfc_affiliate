@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ClickController extends Controller
 {
-    public function store(Request $request, $affiliateLinkId)
+    public function trackClick(Request $request, $affiliateLinkId)
     {
         // Find the affiliate link by ID
         $affiliateLink = AffiliateLink::where('link', $affiliateLinkId)->first();
@@ -18,7 +18,10 @@ class ClickController extends Controller
         $click->affiliate_link_id = $affiliateLink->id;
         $click->affiliate_id = Auth::user() ? Auth::user()->id : null;
         $click->save();
+
+        session(['affiliate_id' => $affiliateLinkId]);
+
         // Redirect to the actual link intended by the affiliate link
-        return redirect('product/' . $affiliateLink->link);
+        return redirect('products/' . $affiliateLink->product->id);
     }
 }

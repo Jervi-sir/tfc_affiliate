@@ -1,40 +1,16 @@
 <header class="header style7">
-    {{--
-        <div class="top-bar">
+    @if(session('affiliate_id'))
+    <div class="top-bar">
         <div class="container">
             <div class="top-bar-left">
                 <div class="header-message">
-                    Welcome to our online store!
+                    You are under an affiliate mode
                 </div>
-            </div>
-            <div class="top-bar-right">
-                <div class="header-language">
-                    <div class="teamo-language teamo-dropdown">
-                        <a href="#" class="active language-toggle" data-teamo="teamo-dropdown">
-                            <span>
-                                English (USD)
-                            </span>
-                        </a>
-                        <ul class="teamo-submenu">
-                            <li class="switcher-option">
-                                <a href="#">
-                                    <span>
-                                        French (EUR)
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <ul class="header-user-links">
-                    <li>
-                        <a href="login.html">Login or Register</a>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
-    --}}
+    @endif
+
     <div class="container">
         <div class="main-header">
             <div class="row">
@@ -64,6 +40,18 @@
                 <div class="col-lg-2 col-sm-12 col-md-3 col-xs-12 col-ts-12">
                     <div class="header-control">
                         @auth
+                        @php
+                                $user = auth()->user(); // Or any method you use to get the specific user
+
+                                $cartItems = $user->carts()->with('product')->where('status', 'unpaid')->get();
+
+                                $totalPrice = $cartItems->reduce(function ($carry, $item) {
+                                    return $carry + ($item->quantity * $item->product->price);
+                                }, 0);
+                        @endphp
+                        <div class="block-minicart teamo-mini-cart block-header teamo-dropdown">
+                            <span>$ {{ $totalPrice }}</span>
+                        </div>
                         <div class="block-minicart teamo-mini-cart block-header teamo-dropdown">
                             <a href={{ route('cart.show') }} class="shopcart-icon" {{--data-teamo="teamo-dropdown"--}}>
                                 Cart
@@ -332,6 +320,15 @@
                             </li>
                             <li class="menu-item">
                                 <a href={{ route('admin.dashboard')}} class="teamo-menu-item-title" title="About">Dashboard</a>
+                            </li>
+                            <li class="menu-item">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+
+                                    <button type="submit" >
+                                        {{ __('Log Out') }}
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>

@@ -27,4 +27,12 @@ class AffiliateLink extends Model
         return $this->hasMany(Click::class);
     }
 
+    public function purchaseRecords() {
+        return $this->hasMany(PurchaseRecord::class, 'affiliate_id');
+    }
+
+    public function getTotalSalesAttribute()
+    {
+        return $this->purchaseRecords()->sum('total_price');
+    }
 }

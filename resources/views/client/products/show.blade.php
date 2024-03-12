@@ -104,11 +104,14 @@
                                         <button type="submit" class="single_add_to_cart_button button">Add to cart</button>
                                     </div>
                                 </form>
+                                @auth
+
                                 <form id="generateAffiliateLinkForm" style="margin-top: 20px">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                                     <button type="button" class="btn btn-primary" onclick="generateAffiliateLink()">Generate an Affiliate Link</button>
                                 </form>
+                                @endauth
 
                                 <script>
                                     function generateAffiliateLink() {
@@ -120,12 +123,12 @@
                                                 product_id: $('input[name="product_id"]').val(),
                                             },
                                             success: function(response) {
+                                                const link ='localhost:8000/affiliate/' + response.link
                                                 // Display the popup with the link
-                                                alert("Your affiliate link: " + response
-                                                .link); // Example, replace with your popup implementation
+                                                alert("Your affiliate link: " + link); // Example, replace with your popup implementation
 
                                                 // Copy link to clipboard
-                                                navigator.clipboard.writeText(response.link).then(function() {
+                                                navigator.clipboard.writeText(link).then(function() {
                                                     console.log('Copying to clipboard was successful!');
                                                 }, function(err) {
                                                     console.error('Could not copy text: ', err);

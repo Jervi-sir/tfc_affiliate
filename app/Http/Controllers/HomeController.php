@@ -11,7 +11,7 @@ class HomeController extends Controller
     {
         $trendyProducts = Product::take(6)->get();
 
-        $products = Product::inRandomOrder()->take(4)->get();
+        $products = Product::inRandomOrder()->paginate(8);
 
         return view('client.home.home',[
             'trendyProducts' => $trendyProducts,
