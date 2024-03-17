@@ -27,7 +27,7 @@
                             </div>
                             <div class="product-info">
                                 <div class="product-count-down">
-                                    <div class="teamo-countdown" data-y="2024" data-m="3" data-w="4" data-d="15"
+                                    <div class="teamo-countdown" data-y="2024" data-m="3" data-w="4" data-d="19"
                                          data-h="20" data-i="20" data-s="60"></div>
                                 </div>
                                 <h5 class="product-name product_title">

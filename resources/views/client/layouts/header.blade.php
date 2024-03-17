@@ -321,6 +321,7 @@
                             <li class="menu-item">
                                 <a href={{ route('admin.dashboard')}} class="teamo-menu-item-title" title="About">Dashboard</a>
                             </li>
+                            @auth
                             <li class="menu-item">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -330,6 +331,7 @@
                                     </button>
                                 </form>
                             </li>
+                            @endauth
                         </ul>
                     </div>
                 </div>
